@@ -31,10 +31,11 @@ defmodule Ddos.GenServesr.Ddos do
                 fn -> 
                     Enum.each(uries, fn uri -> 
                         case HTTPoison.get(uri, [], [ssh: [verify: :verify_none], hackney: [pool: :ddos, recv_timeout: 15_000]]) do
-                            {:ok, _body} = response -> 
-                                RequestsCache.increment_requests_counter()
-                            response ->
+                            {:ok, body} = response -> 
                                 RequestsCache.increment_success_requests_counter()
+                                IO.inspect(body)
+                            response ->
+                                RequestsCache.increment_requests_counter()
                         end
                     end)
                 end
