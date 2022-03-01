@@ -15,7 +15,6 @@ RUN mix local.rebar --force && \
     mix local.hex --force
 
 ENV MIX_ENV="prod"
-ENV PHX_SERVER="true"
 
 COPY mix.exs .
 COPY mix.lock .
@@ -37,7 +36,6 @@ RUN apk add --no-cache libstdc++
 EXPOSE 4000
 
 ENV MIX_ENV="prod"
-ENV PHX_SERVER="true"
 
 RUN mkdir /app
 WORKDIR /app
