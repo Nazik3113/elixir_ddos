@@ -6,4 +6,5 @@ services:
       context: .
     environment:
       THREADS: "1000"
-      URIES: "https://wikimapia.org/infu/,https://wikimapia.org/z1/itiles/,https://wikimapia.org,https://185.169.155.16/"      
+      URIES: "https://www.dme.ru/"
+      PROXYS: ""      

