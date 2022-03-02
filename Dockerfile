@@ -33,8 +33,6 @@ RUN apk add --update bash openssl
 
 RUN apk add --no-cache libstdc++
 
-EXPOSE 4000
-
 ENV MIX_ENV="prod"
 
 RUN mkdir /app
