@@ -12,11 +12,17 @@ defmodule Ddos.Agents.DdosConfig do
 
         active_proxys = Proxy.validate_proxy_list(proxys)
 
-        if length(active_proxys) === 0 do
-            Agent.start_link(fn -> %{threads: threads, uries: uries, proxys: active_proxys, use_proxy: false} end, name: __MODULE__)            
-        else
-            Agent.start_link(fn -> %{threads: threads, uries: uries, proxys: active_proxys, use_proxy: true} end, name: __MODULE__)            
-        end
+        conf = %{threads: threads, uries: uries, proxys: active_proxys}
+
+        Agent.start_link(fn -> 
+                if length(active_proxys) === 0 do
+                    Map.put(conf, :use_proxy, false)
+                else
+                    Map.put(conf, :use_proxy, true)
+                end
+            end, 
+            name: __MODULE__
+        )
     end
     
     def get_threads() do
