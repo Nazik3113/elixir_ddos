@@ -5,6 +5,6 @@ services:
     build:
       context: .
     environment:
-      THREADS: "1000"
+      THREADS: "500"
       URIES: "https://www.dme.ru/"
       PROXYS: ""      
