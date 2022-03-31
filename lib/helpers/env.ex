@@ -1,9 +1,9 @@
 defmodule Ddos.Helpers.Env do
     @moduledoc false 
     
-    def get_uries_from_env do
-        uries = System.get_env("URIES") || raise "environment variable URIES is missing."
-        String.split(uries, ",")
+    def get_urls_from_env do
+        urls = System.get_env("URLS") || raise "environment variable URLS is missing."
+        String.split(urls, ",")
     end
 
     def get_proxys_from_env do

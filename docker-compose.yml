@@ -6,5 +6,5 @@ services:
       context: .
     environment:
       THREADS: "500"
-      URIES: "https://www.dme.ru/"
+      URLS: "https://www.example.com/"
       PROXYS: ""      

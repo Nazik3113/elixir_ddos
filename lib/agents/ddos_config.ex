@@ -5,14 +5,14 @@ defmodule Ddos.Agents.DdosConfig do
 
     def start_link(nil) do
         threads = Env.get_threads_from_env()
-        uries = Env.get_uries_from_env()
+        urls = Env.get_urls_from_env()
         proxys = Env.get_proxys_from_env()
 
-        IO.inspect("ddos to #{inspect(uries)}")
+        IO.inspect("ddos to #{inspect(urls)}")
 
         active_proxys = Proxy.validate_proxy_list(proxys)
 
-        conf = %{threads: threads, uries: uries, proxys: active_proxys}
+        conf = %{threads: threads, urls: urls, proxys: active_proxys}
 
         Agent.start_link(fn -> 
                 if length(active_proxys) === 0 do
@@ -29,8 +29,8 @@ defmodule Ddos.Agents.DdosConfig do
         Agent.get(__MODULE__, fn %{threads: threads} -> threads end)
     end
 
-    def get_uries() do
-        Agent.get(__MODULE__, fn %{uries: uries} -> uries end)
+    def get_urls() do
+        Agent.get(__MODULE__, fn %{urls: urls} -> urls end)
     end
 
     def get_random_proxy do
